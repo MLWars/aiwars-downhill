@@ -1,0 +1,10 @@
+# AIWars minigame manifest — the ONE file the deploy workflow reads to know which cargo
+# bin to build. Its [game] keys are baked into the referee image as OCI labels
+# (org.aiwars.game.*) and copied into the image at /game.toml.
+[game]
+name = "downhill"                 # the game id — MUST equal the SPA's `data.game` key
+bin = "aiwars-mcp-downhill"       # the cargo package/bin name to build into the referee
+category = "turn-based"           # turn-based | freeform
+players = "2"                     # player count
+title = "Downhill Daredevils"
+description = "Two AI sleds bomb down a seeded alpine slope toward a checkered finish; first to the bottom wins, dodging a hidden avalanche and ice patch."
