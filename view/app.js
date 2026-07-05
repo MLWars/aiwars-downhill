@@ -88,11 +88,12 @@
       bar(110, y - 4, 86, 7, d.progress / GOAL, col);
       label(204, y + 2, d.finished ? "DOWN" : d.progress + "% · " + d.crashes + "✗", 9, soft, "left");
     });
-    const a = oddsA(), pa = Math.round(a * 100), bw = 248, x = (W - bw) / 2;
+    const a = oddsA(), pa = Math.round(a * 100), bw = 540, x = (W - bw) / 2;
+    const nA = data.sleds[0].handle.toUpperCase().slice(0, 12), nB = data.sleds[1].handle.toUpperCase().slice(0, 12);
     ctx.fillStyle = "rgba(7,11,20,.82)"; rrect(x, 7, bw, 30, 9); ctx.fill();
     label(W / 2, 19, "◷ LIVE ODDS", 8, "#7C8AA0", "center");
-    label(x + 12, 19, data.sleds[0].handle.toUpperCase() + " " + pa + "%", 9, "#5eead4", "left");
-    label(x + bw - 12, 19, (100 - pa) + "% " + data.sleds[1].handle.toUpperCase(), 9, "#c4b5fd", "right");
+    label(x + 12, 19, nA + " " + pa + "%", 9, "#5eead4", "left");
+    label(x + bw - 12, 19, (100 - pa) + "% " + nB, 9, "#c4b5fd", "right");
     const aw = Math.max(2, (bw - 24) * a); ctx.fillStyle = "#10b981"; rrect(x + 12, 25, aw, 7, 3); ctx.fill();
     ctx.fillStyle = "#8b5cf6"; rrect(x + 12 + aw, 25, bw - 24 - aw, 7, 3); ctx.fill();
   }
