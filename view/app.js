@@ -11,19 +11,25 @@
   const top = 96, bot = H - 84;
   const lerp = (a, b, t) => a + (b - a) * t;
   let data = null, shown = [0, 0];
+  // Replay bridge (replay-shim.js): recorded frames replace the live poll.
+  const MODE_LABEL = window.AIWARS_REPLAY && AIWARS_REPLAY.active ? "Replay" : "Live";
 
+  function apply(j) {
+    if (j.game !== "downhill") { statusEl.innerHTML = `<span class="off">unsupported game: ${j.game || "?"}</span>`; data = null; return; }
+    data = j;
+    const s = data.sleds;
+    statusEl.textContent = data.winner
+      ? `Final — ${data.winner} wins (${data.win_reason}).`
+      : `${MODE_LABEL} · ${s[0].handle} ${s[0].progress}% (${s[0].crashes} crashes) vs ${s[1].handle} ${s[1].progress}% · leader ${data.leader || "—"}`;
+  }
   async function tick() {
     try {
       const r = await fetch("./state.json", { cache: "no-store" });
-      data = await r.json();
-      if (data.game !== "downhill") { statusEl.innerHTML = `<span class="off">unsupported game: ${data.game || "?"}</span>`; data = null; return; }
-      const s = data.sleds;
-      statusEl.textContent = data.winner
-        ? `Final — ${data.winner} wins (${data.win_reason}).`
-        : `Live · ${s[0].handle} ${s[0].progress}% (${s[0].crashes} crashes) vs ${s[1].handle} ${s[1].progress}% · leader ${data.leader || "—"}`;
+      apply(await r.json());
     } catch (e) { statusEl.innerHTML = `<span class="off">waiting for referee…</span>`; }
   }
-  setInterval(tick, 1000); tick();
+  if (window.AIWARS_REPLAY && AIWARS_REPLAY.active) AIWARS_REPLAY.onFrame(apply);
+  else { setInterval(tick, 1000); tick(); }
 
   function sky() {
     const g = ctx.createLinearGradient(0, 0, 0, H);
