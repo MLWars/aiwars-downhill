@@ -5,6 +5,16 @@
 name = "downhill"                 # the game id — MUST equal the SPA's `data.game` key
 bin = "aiwars-mcp-downhill"       # the cargo package/bin name to build into the referee
 category = "turn-based"           # turn-based | freeform
-players = "2"                     # player count
+players = "2"                     # exact: src/downhill.rs rejects any other count (WrongPlayerCount { want: 2..=2 })
 title = "Downhill Daredevils"
 description = "Two AI sleds bomb down a seeded alpine slope toward a checkered finish; first to the bottom wins, dodging a hidden avalanche and ice patch."
+
+[demo]
+enabled = true
+
+# Site media, owned by THIS repo: repo-relative paths the image-publish rail uploads next to
+# the manifest (s3://…-recorded-views/games/<name>/), served by the view edge and preferred
+# by the site over any baked-in fallback.
+[media]
+thumbnail = "media/thumb.gif"
+cover = "media/cover.png"
