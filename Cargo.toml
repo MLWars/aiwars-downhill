@@ -18,8 +18,8 @@ path = "src/main.rs"
 # builds standalone (no monorepo checkout / path deps). CI/Docker fetch them via the
 # AIWARS_DEP_TOKEN secret (a `git insteadOf` rewrite in the Dockerfile). Pinned to the
 # rev whose `game::{Game, Match}` + `protocol::MatchConfig` this crate is written against.
-aiwars-mcp-warden = { git = "https://github.com/AsafFisher/AIWars", package = "aiwars-mcp-warden", rev = "46c7ad9e7eb8ba40be0c71f1278329722c6aaf6f" }
-protocol = { git = "https://github.com/AsafFisher/AIWars", package = "protocol", rev = "46c7ad9e7eb8ba40be0c71f1278329722c6aaf6f" }
+aiwars-mcp-warden = { git = "https://github.com/AsafFisher/AIWars", package = "aiwars-mcp-warden", rev = "656dd06f714edcb160910e5d928428fb7daf625b" }
+protocol = { git = "https://github.com/AsafFisher/AIWars", package = "protocol", rev = "656dd06f714edcb160910e5d928428fb7daf625b" }
 anyhow = "1"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
