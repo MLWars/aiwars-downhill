@@ -18,9 +18,11 @@
     if (j.game !== "downhill") { statusEl.innerHTML = `<span class="off">unsupported game: ${j.game || "?"}</span>`; data = null; return; }
     data = j;
     const s = data.sleds;
+    // One short line: the site frames this view in a ~342px box, so the status
+    // strip fits ~50 characters before it ellipsises.
     statusEl.textContent = data.winner
-      ? `Final — ${data.winner} wins (${data.win_reason}).`
-      : `${MODE_LABEL} · ${s[0].handle} ${s[0].progress}% (${s[0].crashes} crashes) vs ${s[1].handle} ${s[1].progress}% · leader ${data.leader || "—"}`;
+      ? `Final · ${data.winner} wins (${data.win_reason})`
+      : `${MODE_LABEL} · ${s[0].handle} ${s[0].progress}% ${s[0].crashes}✗ · ${s[1].handle} ${s[1].progress}% ${s[1].crashes}✗`;
   }
   async function tick() {
     try {
@@ -88,14 +90,17 @@
   }
   function hud() {
     if (!data) return; const s = data.sleds, rows = [[s[0], "#10b981", "#5eead4"], [s[1], "#8b5cf6", "#c4b5fd"]];
-    ctx.fillStyle = "rgba(8,14,26,.8)"; rrect(12, 44, 230, 60, 10); ctx.fill();
-    rows.forEach(([d, col, soft], i) => { const y = 62 + i * 26;
+    // Scoreboard sits in the top-left sky band, OFF the piste: it ends at y 55,
+    // above the run (top 96), above the roof of a sled on the start line (y 73)
+    // and its WIPEOUT callout (y 57), and left of the centred odds pill (x 266).
+    ctx.fillStyle = "rgba(8,14,26,.8)"; rrect(12, 7, 230, 48, 10); ctx.fill();
+    rows.forEach(([d, col, soft], i) => { const y = 24 + i * 20;
       label(24, y + 4, d.handle.toUpperCase().slice(0, 12), 10, soft, "left");
-      bar(110, y - 4, 86, 7, d.progress / GOAL, col);
-      label(204, y + 2, d.finished ? "DOWN" : d.progress + "% · " + d.crashes + "✗", 9, soft, "left");
+      bar(110, y - 4, 66, 7, d.progress / GOAL, col);
+      label(230, y + 2, d.finished ? "DOWN" : d.progress + "% · " + d.crashes + "✗", 9, soft, "right");
     });
-    const a = oddsA(), pa = Math.round(a * 100), bw = 540, x = (W - bw) / 2;
-    const nA = data.sleds[0].handle.toUpperCase().slice(0, 12), nB = data.sleds[1].handle.toUpperCase().slice(0, 12);
+    const a = oddsA(), pa = Math.round(a * 100), bw = 248, x = (W - bw) / 2;
+    const nA = data.sleds[0].handle.toUpperCase().slice(0, 9), nB = data.sleds[1].handle.toUpperCase().slice(0, 9);
     ctx.fillStyle = "rgba(7,11,20,.82)"; rrect(x, 7, bw, 30, 9); ctx.fill();
     label(W / 2, 19, "◷ LIVE ODDS", 8, "#7C8AA0", "center");
     label(x + 12, 19, nA + " " + pa + "%", 9, "#5eead4", "left");
@@ -117,8 +122,9 @@
       for (let i = 0; i < 2; i++) shown[i] += (s[i].progress - shown[i]) * 0.12;
       const pos = [0, 1].map(i => ({ x: LANE_X[s[i].lane] || W / 2, y: lerp(top, bot, Math.min(1, shown[i] / GOAL)) }));
       const order = data.leader === s[0].handle ? [1, 0] : [0, 1];
+      hud();   // chrome first: sleds paint OVER it if they ever meet
       for (const i of order) sled(pos[i].x, pos[i].y, i ? "#8b5cf6" : "#10b981", s[i].handle, i ? "B" : "A", s[i].last_crash >= 0 && s[i].last_crash === s[i].leg, t);
-      hud(); finish();
+      finish();
     }
     requestAnimationFrame(frame);
   }
