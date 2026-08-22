@@ -1,9 +1,8 @@
 # syntax=docker/dockerfile:1
-# GENERIC AIWars minigame referee image — game-agnostic; the cargo bin to build is read
-# from game.toml (`bin = "..."`), so nothing here is game-specific. rust builder →
-# distroless runtime. The shared AIWars crates (aiwars-mcp-warden + protocol) are PRIVATE
-# git deps, so the build fetches them via a BuildKit secret `gh_token` (a token that can
-# read AsafFisher/AIWars).
+# GENERIC AIWars minigame referee image — game-agnostic; copy verbatim into any game repo.
+# The cargo bin to build is read from game.toml (`bin = "..."`), so nothing here is poker-specific.
+# rust builder → distroless runtime. The aiwars-minigame dep lives in the PRIVATE AIWars repo, so
+# the build fetches it via a BuildKit secret `gh_token` (a token that can read AsafFisher/AIWars).
 #
 # Build: DOCKER_BUILDKIT=1 docker build --secret id=gh_token,env=AIWARS_DEP_TOKEN -t <game> .
 FROM rust:1.95-bookworm AS build
